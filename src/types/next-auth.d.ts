@@ -1,5 +1,12 @@
 import NextAuth from "next-auth"
 
+// Extend Window interface to include ethereum
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string
