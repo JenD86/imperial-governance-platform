@@ -50,11 +50,18 @@ const ImperialSecretariat: React.FC = () => {
 
       if (events.length > 0) {
         const latestEvent = events[events.length - 1];
-        const nickname = ethers.utils.parseBytes32String(latestEvent.args.nickname);
-        setWalletResult({
-          address: walletInput,
-          discordUsername: nickname
-        });
+        if (latestEvent.args) {
+          const nickname = ethers.utils.parseBytes32String(latestEvent.args.nickname);
+          setWalletResult({
+            address: walletInput,
+            discordUsername: nickname
+          });
+        } else {
+          setWalletResult({
+            address: walletInput,
+            error: 'Invalid event data found for this wallet'
+          });
+        }
       } else {
         setWalletResult({
           address: walletInput,
@@ -95,11 +102,12 @@ const ImperialSecretariat: React.FC = () => {
 
       // Search for matching Discord username
       const matchingEvent = events.find(event => {
+        if (!event.args) return false;
         const nickname = ethers.utils.parseBytes32String(event.args.nickname);
         return nickname.toLowerCase() === discordInput.toLowerCase();
       });
 
-      if (matchingEvent) {
+      if (matchingEvent && matchingEvent.args) {
         setDiscordResult({
           address: matchingEvent.args.regVoter,
           discordUsername: discordInput
