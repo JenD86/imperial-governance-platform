@@ -61,42 +61,48 @@ export default function TabNavigation({ provider, account, children, lastTransac
         {activeTab === 'courtyard' && (
           <div>
             <h2 className="text-2xl font-daobi text-center mb-6">The Inner Courtyard</h2>
-            <div className="space-y-8">
-              <FactionalismRegistry
-                provider={provider}
-                account={account}
-                voteContract={new ethers.Contract(
-                  process.env.NEXT_PUBLIC_VOTE_ADDR!,
-                  ['function vote(address _voteFor) external', 'function recluse() external', 'function selfImmolate() external'],
-                  provider
-                )}
-                onTransactionSubmitted={(hash) => console.log('Transaction submitted:', hash)}
-                onTokenBurned={onTokenBurned}
-              />
-              
-              <CourtOfBanishment
-                provider={provider}
-                account={account}
-                banishmentContract={new ethers.Contract(
-                  process.env.NEXT_PUBLIC_BANISHMENT_ADDR!,
-                  [
-                    'function makeAccusation(address _target) external',
-                    'function banish(address _target) external',
-                    'function thirdPartyRefute(address _target) external',
-                    'function grudgeBook(address) external view returns (address accuser, uint32 accusationTime, uint256 accBalance, address[] supporters)',
-                    'function responseDays() external view returns (uint8)',
-                    'function staleDays() external view returns (uint8)',
-                    'function minSupporters() external view returns (uint16)',
-                    'function idleDays() external view returns (uint8)',
-                    'event AccusationMade(address indexed _accuser, address indexed _target)',
-                    'event AccusationJoined(address indexed _target, address supporter)',
-                    'event Banished(address indexed _accuser, address indexed _target)'
-                  ],
-                  provider
-                )}
-                onTransactionSubmitted={(hash) => console.log('Transaction submitted:', hash)}
-              />
-            </div>
+            {provider && account ? (
+              <div className="space-y-8">
+                <FactionalismRegistry
+                  provider={provider}
+                  account={account}
+                  voteContract={new ethers.Contract(
+                    process.env.NEXT_PUBLIC_VOTE_ADDR!,
+                    ['function vote(address _voteFor) external', 'function recluse() external', 'function selfImmolate() external'],
+                    provider
+                  )}
+                  onTransactionSubmitted={(hash) => console.log('Transaction submitted:', hash)}
+                  onTokenBurned={onTokenBurned}
+                />
+                
+                <CourtOfBanishment
+                  provider={provider}
+                  account={account}
+                  banishmentContract={new ethers.Contract(
+                    process.env.NEXT_PUBLIC_BANISHMENT_ADDR!,
+                    [
+                      'function makeAccusation(address _target) external',
+                      'function banish(address _target) external',
+                      'function thirdPartyRefute(address _target) external',
+                      'function grudgeBook(address) external view returns (address accuser, uint32 accusationTime, uint256 accBalance, address[] supporters)',
+                      'function responseDays() external view returns (uint8)',
+                      'function staleDays() external view returns (uint8)',
+                      'function minSupporters() external view returns (uint16)',
+                      'function idleDays() external view returns (uint8)',
+                      'event AccusationMade(address indexed _accuser, address indexed _target)',
+                      'event AccusationJoined(address indexed _target, address supporter)',
+                      'event Banished(address indexed _accuser, address indexed _target)'
+                    ],
+                    provider
+                  )}
+                  onTransactionSubmitted={(hash) => console.log('Transaction submitted:', hash)}
+                />
+              </div>
+            ) : (
+              <div className="text-center text-gray-400 py-8">
+                <p>Please connect your wallet to access the Inner Courtyard</p>
+              </div>
+            )}
           </div>
         )}
         

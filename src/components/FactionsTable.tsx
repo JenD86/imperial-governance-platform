@@ -157,6 +157,7 @@ export default function FactionsTable({ provider, onDemandUpdate = false, lastTr
     // Process registration events
     regEvents.forEach(event => {
       try {
+        if (!event.args) return;
         const voter = event.args.regVoter;
         const nickname = ethers.utils.parseBytes32String(event.args.nickname);
         const initVote = event.args.initVote;
@@ -170,6 +171,7 @@ export default function FactionsTable({ provider, onDemandUpdate = false, lastTr
     // Process vote events (override initial votes)
     voteEvents.forEach(event => {
       try {
+        if (!event.args) return;
         const voter = event.args.voter.toLowerCase();
         const candidate = event.args.candidate.toLowerCase();
         
