@@ -38,7 +38,7 @@ const VOTING_ABI = [
 
 export default function Home() {
   const { data: session } = useSession();
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | undefined>(undefined);
   const [account, setAccount] = useState<string>('');
   const [tokenBalance, setTokenBalance] = useState<string>('0');
   const [voteBalance, setVoteBalance] = useState<string>('0');
@@ -424,7 +424,7 @@ export default function Home() {
     
     // Reset all state
     setAccount('');
-    setProvider(null);
+    setProvider(undefined);
     setTokenBalance('0');
     setVoteBalance('0');
     setChancellor('');
@@ -847,8 +847,12 @@ export default function Home() {
                         hasVoteToken={parseInt(voteBalance) > 0}
                         isRegistered={isRegistered}
                         provider={provider}
+                        tokenBalance={tokenBalance}
+                        allowance={allowance}
                         onWalletConnect={connectWallet}
                         onRegistrationComplete={handleRegistrationComplete}
+                        onApprove={() => {}}
+                        onStakeAndRegister={() => {}}
                       />
                     </div>
                   </div>
