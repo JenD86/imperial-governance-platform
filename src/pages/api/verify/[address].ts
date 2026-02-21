@@ -80,7 +80,7 @@ export default async function handler(
     console.log('Resolved address:', resolvedAddress);
     console.log('Addresses match:', resolvedAddress === address);
   } catch (error) {
-    console.log('Signature verification failed:', error.message);
+    console.log('Signature verification failed:', error instanceof Error ? error.message : String(error));
     return res.status(401).json({ error: "Invalid signature format" });
   }
 
@@ -216,7 +216,7 @@ export default async function handler(
             }
           }
         } catch (error) {
-          console.log('Frontend message verification failed:', error.message);
+          console.log('Frontend message verification failed:', error instanceof Error ? error.message : String(error));
         }
       }
       
@@ -268,12 +268,12 @@ export default async function handler(
         return res.status(401).json({ 
           error: `Discord verification required. Please connect Discord and try again.`,
           isBurnedUser: isBurnedUser
-        });
+        } as any);
       }
 
       if (csrfToken && jwt) {
         // Get Discord username from JWT
-        const discordUsername = jwt.discordUsername || 'Unknown';
+        const discordUsername = String(jwt.discordUsername || 'Unknown');
         
         try {
           // Use appropriate RPC endpoint based on environment
@@ -299,7 +299,7 @@ export default async function handler(
 
           // Then register user with Discord username
           console.log('Registering user...');
-          const nickname = ethers.utils.formatBytes32String(discordUsername);
+          const nickname = ethers.utils.formatBytes32String(discordUsername || '');
           const registerTx = await voteContract.register(address, nickname);
           const registerReceipt = await registerTx.wait(2);
 
